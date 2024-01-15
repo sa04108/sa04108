@@ -1,16 +1,36 @@
-### Hi there 👋
+![header](https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=hyunbae's%20page&fontSize=70&animation=fadeIn)
+# About Me
+### Game Client Programmer
+# Language / Softwares
+<img src="https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=cplusplus&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/Csharp-512BD4?style=for-the-badge&logo=csharp&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white"/></a>
 
-<!--
-**sa04108/sa04108** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+<img src="https://img.shields.io/badge/Unity-black?style=for-the-badge&logo=unity&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/Unreal-0E1128?style=for-the-badge&logo=unrealengine&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white"/></a>
+<img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white"/></a>
 
-Here are some ideas to get you started:
+## Interests
+> Computer Graphics / Shader Programming
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+> Multithread
+
+> TCP/IP Socket Programming
+ 
+> Unreal Engine
+
+# Blogs
+- Stock / Coin
+
+<a href="blog.naver.com/hyunbae204"><img src="https://img.shields.io/badge/Naver Blog-03C75A?style=flat&logo=naver&logoColor=white"/></a></a>
+- Algorithms
+
+<a href="psgood.tistory.com"><img src="https://img.shields.io/badge/Tistory-black?style=flat&logo=tistory&logoColor=white"/></a></a>
+
+# Others
+[![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=sa04108)](https://solved.ac/sa04108/)
+
+# Contacts
+<a href="mailto:hyunbae204@gmail.com"><img src="https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white"/></a>
