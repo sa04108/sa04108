@@ -52,7 +52,7 @@ jobs:
             });
             
             // 페이지 내용 대기
-            await page.waitForTimeout(5000);
+            await new Promise(resolve => setTimeout(resolve, 5000));
             
             // '식단' 텍스트 다음 이미지 찾기
             console.log('🔍 식단 관련 이미지 검색 중...');
