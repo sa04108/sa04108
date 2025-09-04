@@ -1,0 +1,176 @@
+name: Send Lunch Menu to Slack
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # 매일 오전 10시 (한국시간)
+  workflow_dispatch:      # 수동 실행
+
+jobs:
+  send-menu:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: |
+        npm init -y
+        npm install puppeteer
+    
+    - name: Get menu image and send to Slack
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        LUNCH_MENU_URL: "https://pf.kakao.com/_xbnuZn/posts"
+      run: |
+        node -e "
+        const puppeteer = require('puppeteer');
+        const https = require('https');
+        
+        (async () => {
+          console.log('🚀 점심 메뉴 웹사이트 크롤링 시작...');
+          
+          const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+          });
+          
+          const page = await browser.newPage();
+          await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+          
+          try {
+            // 페이지 로드
+            console.log('📄 페이지 로드 중...');
+            await page.goto('$LUNCH_MENU_URL', { 
+              waitUntil: 'networkidle0', 
+              timeout: 30000 
+            });
+            
+            // 페이지 내용 대기
+            await page.waitForTimeout(5000);
+            
+            // '식단' 텍스트 다음 이미지 찾기
+            console.log('🔍 식단 관련 이미지 검색 중...');
+            
+            const imageUrl = await page.evaluate(() => {
+              // 모든 텍스트 노드에서 '식단' 포함하는 요소 찾기
+              function findTextNode(node, text) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                  if (node.textContent.includes(text)) {
+                    return node.parentElement;
+                  }
+                } else {
+                  for (let child of node.childNodes) {
+                    const result = findTextNode(child, text);
+                    if (result) return result;
+                  }
+                }
+                return null;
+              }
+              
+              // '식단' 텍스트가 있는 요소 찾기
+              const textElement = findTextNode(document.body, '식단');
+              if (!textElement) {
+                console.log('식단 텍스트를 찾을 수 없습니다.');
+                return null;
+              }
+              
+              // 해당 요소의 부모나 형제 요소에서 이미지 찾기
+              let currentElement = textElement;
+              for (let i = 0; i < 5; i++) { // 최대 5단계까지 상위로 올라가며 검색
+                if (currentElement) {
+                  // 현재 요소와 하위 요소에서 이미지 찾기
+                  const images = currentElement.querySelectorAll('img');
+                  if (images.length > 0) {
+                    for (let img of images) {
+                      if (img.src && (img.src.includes('.jpg') || img.src.includes('.png') || img.src.includes('.jpeg'))) {
+                        return img.src;
+                      }
+                    }
+                  }
+                  
+                  // 다음 형제 요소에서 이미지 찾기
+                  let nextElement = currentElement.nextElementSibling;
+                  while (nextElement) {
+                    const siblingImages = nextElement.querySelectorAll('img');
+                    if (siblingImages.length > 0) {
+                      for (let img of siblingImages) {
+                        if (img.src && (img.src.includes('.jpg') || img.src.includes('.png') || img.src.includes('.jpeg'))) {
+                          return img.src;
+                        }
+                      }
+                    }
+                    nextElement = nextElement.nextElementSibling;
+                  }
+                  
+                  currentElement = currentElement.parentElement;
+                }
+              }
+              
+              return null;
+            });
+            
+            await browser.close();
+            
+            if (imageUrl) {
+              console.log('✅ 이미지 발견:', imageUrl);
+              
+              // Slack으로 전송
+              console.log('📨 Slack으로 전송 중...');
+              
+              const slackData = {
+                channel: '#lunch', // 채널명 변경 가능
+                text: '🍽️ 이번 주 식단 메뉴!',
+                attachments: [{
+                  color: 'good',
+                  title: '카카오 채널 식단 정보',
+                  image_url: imageUrl,
+                  footer: '카카오 채널에서 자동 수집',
+                  ts: Math.floor(Date.now() / 1000)
+                }]
+              };
+              
+              const postData = JSON.stringify(slackData);
+              
+              const options = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Content-Length': Buffer.byteLength(postData)
+                }
+              };
+              
+              const req = https.request('$SLACK_WEBHOOK_URL', options, (res) => {
+                console.log('Slack 응답 상태:', res.statusCode);
+                if (res.statusCode === 200) {
+                  console.log('🎉 Slack 전송 성공!');
+                } else {
+                  console.log('❌ Slack 전송 실패');
+                }
+              });
+              
+              req.on('error', (e) => {
+                console.error('❌ 요청 오류:', e.message);
+                process.exit(1);
+              });
+              
+              req.write(postData);
+              req.end();
+              
+            } else {
+              console.log('❌ 식단 관련 이미지를 찾을 수 없습니다.');
+              process.exit(1);
+            }
+            
+          } catch (error) {
+            console.error('❌ 오류 발생:', error);
+            await browser.close();
+            process.exit(1);
+          }
+        })();
+        "
