@@ -4,11 +4,7 @@ on:
   schedule:
     - cron: '0 1 * * *'  # 매일 오전 10시 (한국시간)
   workflow_dispatch:      # 수동 실행
-
-env:
-  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  LUNCH_MENU_URL: "https://pf.kakao.com/_xbnuZn/posts"
-
+  
 jobs:
   lunchmenu:
     runs-on: ubuntu-latest
@@ -29,4 +25,7 @@ jobs:
         npm install cheerio
     
     - name: Run node script
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        LUNCH_MENU_URL: "https://pf.kakao.com/_xbnuZn/posts"
       run: node lunchmenu.js
