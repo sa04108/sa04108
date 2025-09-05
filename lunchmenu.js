@@ -88,7 +88,7 @@ const https = require('https');
             req.end();
 
             await browser.close();
-            
+            process.exit(0);
         } else {
             console.log('❌ 식단 관련 이미지를 찾을 수 없습니다.');
             await browser.close();
@@ -101,3 +101,4 @@ const https = require('https');
         process.exit(1);
     }
 })();
+
