@@ -6,7 +6,7 @@ on:
   workflow_dispatch:      # 수동 실행
 
 jobs:
-  send-menu:
+  lunchmenu:
     runs-on: ubuntu-latest
     
     steps:
@@ -16,7 +16,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'
+        node-version: '20'
     
     - name: Install dependencies
       run: |
@@ -24,8 +24,8 @@ jobs:
         npm install puppeteer
         npm install cheerio
     
-    - name: Get menu image and send to Slack
+    - name: Run node script
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         LUNCH_MENU_URL: "https://pf.kakao.com/_xbnuZn/posts"
-      run: node sendmenu.js
+      run: node lunchmenu.js
