@@ -29,7 +29,7 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         LUNCH_MENU_URL: "https://pf.kakao.com/_xbnuZn/posts"
       run: |
-        node -e "
+        node -e '
         
         const puppeteer = require('puppeteer');
         const cheerio = require('cheerio');
@@ -127,4 +127,5 @@ jobs:
                 process.exit(1);
             }
         })();
-        "
+        
+        '
