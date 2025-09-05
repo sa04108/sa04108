@@ -87,8 +87,11 @@ const https = require('https');
             req.write(postData);
             req.end();
 
+            await browser.close();
+            
         } else {
             console.log('❌ 식단 관련 이미지를 찾을 수 없습니다.');
+            await browser.close();
             process.exit(1);
         }
 
@@ -98,11 +101,3 @@ const https = require('https');
         process.exit(1);
     }
 })();
-
-
-
-
-
-
-
-
