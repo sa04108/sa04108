@@ -6,8 +6,10 @@ const https = require('https');
     console.log('🚀 점심 메뉴 웹사이트 크롤링 시작...');
 
     try {
-
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            headless: true, // CI 환경에서는 headless 모드 필수
+        });
         const page = await browser.newPage();
         await page.goto('$LUNCH_MENU_URL', { waitUntil: 'networkidle0' });
 
@@ -94,3 +96,4 @@ const https = require('https');
         process.exit(1);
     }
 })();
+
