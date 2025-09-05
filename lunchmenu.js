@@ -4,14 +4,16 @@ const https = require('https');
 
 (async () => {
     console.log('🚀 점심 메뉴 웹사이트 크롤링 시작...');
-
+    console.log('$LUNCH_MENU_URL');
+    console.log('$SLACK_WEBHOOK_URL');
+    
     try {
         const browser = await puppeteer.launch({
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
             headless: true, // CI 환경에서는 headless 모드 필수
         });
         const page = await browser.newPage();
-        await page.goto(process.env.LUNCH_MENU_URL, { waitUntil: 'networkidle0' });
+        await page.goto('$LUNCH_MENU_URL', { waitUntil: 'networkidle0' });
 
         // 페이지 전체 HTML 가져오기
         const html = await page.content();
@@ -68,7 +70,7 @@ const https = require('https');
                 }
             };
 
-            const req = https.request(process.env.SLACK_WEBHOOK_URL, options, (res) => {
+            const req = https.request('$SLACK_WEBHOOK_URL', options, (res) => {
                 console.log('Slack 응답 상태:', res.statusCode);
                 if (res.statusCode === 200) {
                     console.log('🎉 Slack 전송 성공!');
@@ -96,5 +98,6 @@ const https = require('https');
         process.exit(1);
     }
 })();
+
 
 
