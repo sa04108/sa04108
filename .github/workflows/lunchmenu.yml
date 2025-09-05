@@ -28,4 +28,7 @@ jobs:
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         LUNCH_MENU_URL: "https://pf.kakao.com/_xbnuZn/posts"
-      run: node lunchmenu.js
+      run: |
+        echo "SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL"
+        node -e "console.log(process.env.SLACK_WEBHOOK_URL)"
+      #run: node lunchmenu.js
