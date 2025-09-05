@@ -4,8 +4,8 @@ const https = require('https');
 
 (async () => {
     console.log('🚀 점심 메뉴 웹사이트 크롤링 시작...');
-    console.log(env.LUNCH_MENU_URL);
-    console.log(env.SLACK_WEBHOOK_URL);
+    console.log(process.env.LUNCH_MENU_URL);
+    console.log(process.env.SLACK_WEBHOOK_URL);
     
     try {
         const browser = await puppeteer.launch({
@@ -98,6 +98,7 @@ const https = require('https');
         process.exit(1);
     }
 })();
+
 
 
 
